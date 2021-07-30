@@ -25,5 +25,13 @@ public class imsLoginPage {
         driver.findElement(loginBtn).click();
     }
 
+    public void fillLoginField() {
+        driver.findElement(loginField).sendKeys("testovtt");
+    }
+
+    public void fillPasswordField() {
+        driver.findElement(passwordField).sendKeys("377533");
+    }
+
 
 }
