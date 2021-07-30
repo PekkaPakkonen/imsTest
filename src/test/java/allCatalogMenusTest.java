@@ -1,10 +1,15 @@
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.testng.Assert;
+
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 public class allCatalogMenusTest {
@@ -15,9 +20,10 @@ public class allCatalogMenusTest {
     private catalogPage catPage;
 
     @BeforeClass
-    public void setup() {
+    public void setup() throws Exception {
         driver = new FirefoxDriver();
-        driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
+        driver.manage().window().maximize();
+        driver.manage().timeouts().implicitlyWait(100, TimeUnit.SECONDS);
         loginPage = new imsLoginPage(driver);
         mainPage = new imsMainPage(driver);
         catPage = new catalogPage(driver);
@@ -25,7 +31,9 @@ public class allCatalogMenusTest {
         loginPage.fillLoginField();
         loginPage.fillPasswordField();
         loginPage.clickLoginBtn();
+        //new WebDriverWait(driver, 10).until(ExpectedConditions.urlMatches("https://ims3.ekf.su/"));
         mainPage.clickCatalogBtn();
+        //new WebDriverWait(driver, 20).until(ExpectedConditions.urlMatches("https://ims3.ekf.su/hasura/catalog"));
     }
 
     @Test
@@ -33,7 +41,10 @@ public class allCatalogMenusTest {
         catPage.clickAllL1Buttons();
         catPage.clickAllL2Buttons();
         catPage.clickAllL3Buttons();
-            }
+        catPage.clickAllL4Buttons();
+        catPage.clickL3WhiteButtons();
+
+    }
 
     @AfterClass
     public void quit() throws Exception {
