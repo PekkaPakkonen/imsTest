@@ -1,29 +1,20 @@
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
-
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.time.Duration;
-import java.util.concurrent.TimeUnit;
-
 public class allCatalogMenusTest {
-
+    // The test checks if all inner dropdown lists inside catalog dropdown list are clickable and all refs are valid.
     private WebDriver driver;
     private imsLoginPage loginPage;
     private imsMainPage mainPage;
     private catalogPage catPage;
 
     @BeforeClass
-    public void setup() throws Exception {
+    public void setup() {
         driver = new FirefoxDriver();
         driver.manage().window().maximize();
-        driver.manage().timeouts().implicitlyWait(100, TimeUnit.SECONDS);
         loginPage = new imsLoginPage(driver);
         mainPage = new imsMainPage(driver);
         catPage = new catalogPage(driver);
@@ -31,24 +22,24 @@ public class allCatalogMenusTest {
         loginPage.fillLoginField();
         loginPage.fillPasswordField();
         loginPage.clickLoginBtn();
-        //new WebDriverWait(driver, 10).until(ExpectedConditions.urlMatches("https://ims3.ekf.su/"));
+        mainPage.waitForCatalogBtnToBeClickable();
         mainPage.clickCatalogBtn();
-        //new WebDriverWait(driver, 20).until(ExpectedConditions.urlMatches("https://ims3.ekf.su/hasura/catalog"));
     }
 
     @Test
-    public void checkAllRefs() throws Exception {
+    public void checkAllRefs() throws Exception{
+        catPage.waitForCatalogPageToBeClickable();
         catPage.clickAllL1Buttons();
         catPage.clickAllL2Buttons();
         catPage.clickAllL3Buttons();
         catPage.clickAllL4Buttons();
-        catPage.clickL3WhiteButtons();
-
+        for (int i = 0; i < catPage.getAllWhiteButtons().length; i++) {
+            catPage.clickAllWhiteButtons(i);
+        }
     }
 
     @AfterClass
-    public void quit() throws Exception {
-        Thread.sleep(5000);
+    public void quit() {
         driver.quit();
     }
 
