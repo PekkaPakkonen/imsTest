@@ -4,6 +4,8 @@ import org.openqa.selenium.WebDriver;
 public class imsLoginPage {
 
     private WebDriver driver;
+    private final String login = "testovtt";
+    private final String password = "377533";
 
     private final By loginField = By.cssSelector(".form-control[type = \"text\"]");
     private final By passwordField = By.cssSelector(".form-control[type = \"password\"]");
@@ -25,12 +27,13 @@ public class imsLoginPage {
         driver.findElement(loginBtn).click();
     }
 
-    public void fillLoginField() {
-        driver.findElement(loginField).sendKeys("testovtt");
+    public void fillPasswordField() {
+        driver.findElement(passwordField).sendKeys(password);
+
     }
 
-    public void fillPasswordField() {
-        driver.findElement(passwordField).sendKeys("377533");
+    public void fillLoginField() {
+        driver.findElement(loginField).sendKeys(login);
     }
 
 
