@@ -1,11 +1,10 @@
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class allCatalogMenusTest {
-    // The test checks if all inner dropdown lists inside catalog dropdown list are clickable and all refs are valid.
+public class allMenuItemsTest {
+
     private WebDriver driver;
     private imsLoginPage loginPage;
     private imsMainPage mainPage;
@@ -27,18 +26,7 @@ public class allCatalogMenusTest {
     }
 
     @Test
-    public void checkAllRefs() {
-        catPage.waitForCatalogPageToBeClickable();
-        catPage.clickAllL1Buttons();
-        catPage.clickAllL2Buttons();
-        catPage.clickAllL3Buttons();
-        catPage.clickAllL4Buttons();
+    public void checkAllItems() throws Exception {
         catPage.refreshAndClickButtons();
     }
-
-    @AfterClass
-    public void quit() {
-        driver.quit();
-    }
-
 }
