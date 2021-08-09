@@ -1,5 +1,6 @@
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -9,6 +10,7 @@ public class allMenuItemsTest {
     private imsLoginPage loginPage;
     private imsMainPage mainPage;
     private catalogPage catPage;
+    private itemTablePage itemPage;
 
     @BeforeClass
     public void setup() {
@@ -17,6 +19,7 @@ public class allMenuItemsTest {
         loginPage = new imsLoginPage(driver);
         mainPage = new imsMainPage(driver);
         catPage = new catalogPage(driver);
+        itemPage = new itemTablePage(driver);
         driver.get("https://ims3.ekf.su/login");
         loginPage.fillLoginField();
         loginPage.fillPasswordField();
@@ -27,6 +30,12 @@ public class allMenuItemsTest {
 
     @Test
     public void checkAllItems() throws Exception {
-        catPage.refreshAndClickButtons();
+        catPage.waitForCatalogPageToBeClickable();
+        catPage.clickAllWhiteButtons_2(0);
+    }
+
+    @AfterClass
+    public void quit() {
+        driver.quit();
     }
 }

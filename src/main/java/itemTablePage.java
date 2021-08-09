@@ -15,7 +15,7 @@ public class itemTablePage {
         exec = (JavascriptExecutor) driver;
     }
 
-    private WebElement[] getAllItemLinks() {
+    public WebElement[] getAllItemLinks() {
         return driver.findElements(AllItemLinks).toArray(new WebElement[0]);
     }
 }

@@ -8,6 +8,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class catalogPage {
     private WebDriver driver;
     private JavascriptExecutor exec;
+    private itemTablePage tablePage;
 
     //clickable dropdown list elements
     private final By l1Buttons = By.cssSelector(".l1> div > .btn .caret");
@@ -20,6 +21,7 @@ public class catalogPage {
     public catalogPage(WebDriver driver) {
         this.driver = driver;
         exec = (JavascriptExecutor) driver;
+        tablePage = new itemTablePage(driver);
     }
 
     public void clickAllL1Buttons() {
@@ -70,19 +72,32 @@ public class catalogPage {
 
     }
 
-    private void clickAllWhiteButtons_2(int i) {
-        WebElement[] l3WhiteButtons = getAllWhiteButtons();
+    public void clickAllWhiteButtons_2(int i) throws InterruptedException {
 
-        l3WhiteButtons[i].click();
-        new WebDriverWait(driver, 10).until(ExpectedConditions.urlContains("short_name"));
+        WebElement[] itemLinks;
+        WebElement[] l3WhiteButtons;
 
-        driver.navigate().back();
-        new WebDriverWait(driver, 10).until(ExpectedConditions.urlToBe("https://ims3.ekf.su/hasura/catalog"));
-        waitForCatalogPageToBeClickable();
         jsClickElements(driver.findElements(By.cssSelector(".l1> div > .btn .px-2:nth-child(2)")).toArray(new WebElement[0]));
         jsClickElements(driver.findElements(By.cssSelector(".l2> div > .btn .px-2:nth-child(2)")).toArray(new WebElement[0]));
         jsClickElements(driver.findElements(By.cssSelector(".l3> div > .btn .px-2:nth-child(2)")).toArray(new WebElement[0]));
         jsClickElements(driver.findElements(By.cssSelector(".l4> div > .btn .px-2:nth-child(2)")).toArray(new WebElement[0]));
+
+        l3WhiteButtons = getAllWhiteButtons();
+        l3WhiteButtons[i].click();
+
+        new WebDriverWait(driver, 10).until(ExpectedConditions.attributeContains(
+                By.cssSelector(".has-toolbar #table-catalog-category"), "aria-busy", "false"));
+        //new WebDriverWait(driver, 10).until(ExpectedConditions.);
+        while(tablePage.getAllItemLinks().length < 1) {
+
+        }
+        itemLinks = tablePage.getAllItemLinks();
+        new WebDriverWait(driver, 10).until(ExpectedConditions.elementToBeClickable(itemLinks[0]));
+        itemLinks[i].click();
+        driver.navigate().back();
+        new WebDriverWait(driver, 10).until(ExpectedConditions.urlToBe("https://ims3.ekf.su/hasura/catalog"));
+        waitForCatalogPageToBeClickable();
+
 
     }
 
