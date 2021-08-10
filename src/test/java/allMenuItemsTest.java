@@ -31,7 +31,7 @@ public class allMenuItemsTest {
     @Test
     public void checkAllItems() throws Exception {
         catPage.waitForCatalogPageToBeClickable();
-        catPage.clickAllWhiteButtons_2(0);
+        catPage.refreshAndClickPageLinks();
     }
 
     @AfterClass
