@@ -1,7 +1,6 @@
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Action;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -89,7 +88,7 @@ public class catalogPage {
 
     }
 
-    private void clickWhiteButtonAndPageLinks(int i) throws InterruptedException {
+    private void clickWhiteButtonAndPageLinks(int i) {
         final String catalogPageId = driver.getWindowHandle();
         WebElement[] itemLinks;
         WebElement[] l3WhiteButtons;
@@ -98,19 +97,27 @@ public class catalogPage {
         l3WhiteButtons = getAllWhiteButtons();
         l3WhiteButtons[i].click();
 
-        while(tablePage.getAllItemLinks().length < 1) { //is needed to change, possible infinite loop
-            Thread.sleep(200);
-        }
+        tablePage.waitForTableInfoPresence();
 
         itemLinks = tablePage.getAllItemLinks(); //if clicks a next link after the last one on page, throws ElementNotInteractableExc;
         //need to click a link to next page beforehand;
         new WebDriverWait(driver, 10).until(ExpectedConditions.elementToBeClickable(itemLinks[0]));
 
         for (WebElement item : itemLinks) {
-            item.click();
+            try {
+                item.click();
+            } catch (ElementNotInteractableException e) {
+                System.out.println("error detected");
+                tablePage.clickNextPageElement();
+                tablePage.waitForItemInfoPresence();
+
+                item.click();
+            }
             driver.switchTo().window(driver.getWindowHandles().toArray(new String[0])[1]);
+            //tablePage.waitForItemInfoPresence();
             driver.close();
             driver.switchTo().window(catalogPageId);
+
         }
     }
 
