@@ -12,11 +12,15 @@ public class itemTablePage {
     private JavascriptExecutor exec;
 
     private By AllItemLinks = By.cssSelector(".text-left .text-reset");
-    private By nextGoToNextPageBtn = By.cssSelector(".pagination:nth-child(4) > .page-item:nth-child(5) > .page-link");
+    private By goToNextPageBtn = By.cssSelector(".page-link[aria-label=\"Go to next page\"]");
 
     public itemTablePage(WebDriver driver) {
         this.driver = driver;
         exec = (JavascriptExecutor) driver;
+    }
+
+    public WebElement getNextPageBtn() {
+        return driver.findElement(goToNextPageBtn);
     }
 
     public WebElement[] getAllItemLinks() {
@@ -32,7 +36,15 @@ public class itemTablePage {
     }
 
     public void clickNextPageElement() {
-        new Actions(driver).moveToElement(driver.findElement(nextGoToNextPageBtn));
-        driver.findElement(nextGoToNextPageBtn).click();
+        new Actions(driver).moveToElement(driver.findElement(goToNextPageBtn));
+        driver.findElement(goToNextPageBtn).click();
+    }
+
+    public Boolean isNextPageButtonAvailable() {
+        try {
+            return !getNextPageBtn().getAttribute("aria-disabled").equals("true");
+        } catch (NullPointerException e) {
+            return true;
+        }
     }
 }

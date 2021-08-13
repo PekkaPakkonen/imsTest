@@ -1,6 +1,4 @@
 import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Action;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -88,10 +86,11 @@ public class catalogPage {
 
     }
 
-    private void clickWhiteButtonAndPageLinks(int i) {
+    private void clickWhiteButtonAndPageLinks(int i) throws Exception {
         final String catalogPageId = driver.getWindowHandle();
-        WebElement[] itemLinks;
         WebElement[] l3WhiteButtons;
+        WebElement[] itemLinks;
+        boolean flag = true;
 
         jsOpenAllDropdowns();
         l3WhiteButtons = getAllWhiteButtons();
@@ -99,30 +98,28 @@ public class catalogPage {
 
         tablePage.waitForTableInfoPresence();
 
-        itemLinks = tablePage.getAllItemLinks(); //if clicks a next link after the last one on page, throws ElementNotInteractableExc;
-        //need to click a link to next page beforehand;
-        new WebDriverWait(driver, 10).until(ExpectedConditions.elementToBeClickable(itemLinks[0]));
+        new WebDriverWait(driver, 10).until(ExpectedConditions
+                .elementToBeClickable(tablePage.getAllItemLinks()[0]));
 
-        for (WebElement item : itemLinks) {
-            try {
+        while(flag) {
+            flag = tablePage.isNextPageButtonAvailable();
+            itemLinks = tablePage.getAllItemLinks();
+            System.out.println(tablePage.getAllItemLinks().length);
+            for (WebElement item : itemLinks) {
                 item.click();
-            } catch (ElementNotInteractableException e) {
-                System.out.println("error detected");
-                tablePage.clickNextPageElement();
+                driver.switchTo().window(driver.getWindowHandles().toArray(new String[0])[1]);
                 tablePage.waitForItemInfoPresence();
-
-                item.click();
+                driver.close();
+                driver.switchTo().window(catalogPageId);
             }
-            driver.switchTo().window(driver.getWindowHandles().toArray(new String[0])[1]);
-            //tablePage.waitForItemInfoPresence();
-            driver.close();
-            driver.switchTo().window(catalogPageId);
-
+            if(flag) {
+                tablePage.clickNextPageElement();
+                Thread.sleep(3000);
+            }
         }
-    }
-
-    public void closeOtherWindows() {
-
+        driver.navigate().back();
+        driver.navigate().back();
+        waitForCatalogPageToBeClickable();
     }
 
     public void refreshAndClickButtons() {
@@ -133,7 +130,7 @@ public class catalogPage {
         }
     }
 
-    public void refreshAndClickPageLinks() throws InterruptedException {
+    public void refreshAndClickPageLinks() throws Exception {
         int buttonsAmount = getAllWhiteButtons().length;
 
         for(int i = 0; i < buttonsAmount; i++) {
@@ -152,16 +149,12 @@ public class catalogPage {
     //uses js script to open inner dropdown lists in catalog dropdown list
     private void jsClickElements(WebElement[] elements) {
         for(WebElement element : elements) {
-           exec.executeScript("arguments[0].click();", element);
+            exec.executeScript("arguments[0].click();", element);
         }
     }
 
-    public WebElement waitForCatalogPageToBeClickable() {
-        return new WebDriverWait(driver, 10).until(ExpectedConditions.elementToBeClickable(By.cssSelector(".l1:first-child > div > .btn")));
+    public void waitForCatalogPageToBeClickable() {
+        new WebDriverWait(driver, 10).until(ExpectedConditions.elementToBeClickable(By.cssSelector(".l1:first-child > div > .btn")));
     }
-
-
-
-
 
 }
