@@ -33,11 +33,7 @@ public class allCatalogMenusTest {
         catPage.clickAllL2Buttons();
         catPage.clickAllL3Buttons();
         catPage.clickAllL4Buttons();
-        int buttonsAmount = catPage.getAllWhiteButtons().length;
-
-        for(int i = 0; i < buttonsAmount; i++) {
-            catPage.clickAllWhiteButtons(i);
-        }
+        catPage.refreshAndClickButtons();
     }
 
     @AfterClass

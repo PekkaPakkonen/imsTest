@@ -27,6 +27,9 @@ public class itemTablePage {
         return driver.findElements(AllItemLinks).toArray(new WebElement[0]);
     }
 
+    public void waitForItemInfoPresence() {
+        new WebDriverWait(driver, 10).until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".h4.font-weight-bold.d-lg-none")));
+    }
 
     public void waitForTableInfoPresence() {
         new WebDriverWait(driver, 10).until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".text-left .text-reset")));

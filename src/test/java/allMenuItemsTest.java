@@ -1,8 +1,5 @@
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -13,8 +10,7 @@ public class allMenuItemsTest {
     private imsLoginPage loginPage;
     private imsMainPage mainPage;
     private catalogPage catPage;
-    private itemTablePage tablePage;
-    private itemPage itPage;
+    private itemTablePage itemPage;
 
     @BeforeClass
     public void setup() {
@@ -23,8 +19,7 @@ public class allMenuItemsTest {
         loginPage = new imsLoginPage(driver);
         mainPage = new imsMainPage(driver);
         catPage = new catalogPage(driver);
-        tablePage = new itemTablePage(driver);
-        itPage = new itemPage(driver);
+        itemPage = new itemTablePage(driver);
         driver.get("https://ims3.ekf.su/login");
         loginPage.fillLoginField();
         loginPage.fillPasswordField();
@@ -34,44 +29,9 @@ public class allMenuItemsTest {
     }
 
     @Test
-    public void checkAllItems() throws InterruptedException {
+    public void checkAllItems() throws Exception {
         catPage.waitForCatalogPageToBeClickable();
-        int buttonsAmount = catPage.getAllWhiteButtons().length;
-
-        for(int i = 0; i < buttonsAmount; i++) {
-            String catalogPageId = driver.getWindowHandle();
-            WebElement[] l3WhiteButtons;
-            WebElement[] itemLinks;
-            boolean flag = true;
-
-            catPage.jsOpenAllDropdowns();
-            l3WhiteButtons = catPage.getAllWhiteButtons();
-            l3WhiteButtons[i].click();
-
-            tablePage.waitForTableInfoPresence();
-
-            new WebDriverWait(driver, 10).until(ExpectedConditions
-                    .elementToBeClickable(tablePage.getAllItemLinks()[0]));
-
-            while(flag) {
-                flag = tablePage.isNextPageButtonAvailable();
-                itemLinks = tablePage.getAllItemLinks();
-                for (WebElement item : itemLinks) {
-                    item.click();
-                    driver.switchTo().window(driver.getWindowHandles().toArray(new String[0])[1]);
-                    itPage.waitForItemInfoPresence();
-                    driver.close();
-                    driver.switchTo().window(catalogPageId);
-                }
-                if(flag) {
-                    tablePage.clickNextPageElement();
-                    Thread.sleep(3000);
-                }
-            }
-            driver.navigate().back();
-            driver.navigate().back();
-            catPage.waitForCatalogPageToBeClickable();
-        }
+        catPage.refreshAndClickPageLinks();
     }
 
     @AfterClass
