@@ -4,9 +4,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class catalogPage {
 
-    private WebDriver driver;
-    private JavascriptExecutor exec;
-    private itemTablePage tablePage;
+    private final WebDriver driver;
+    private final JavascriptExecutor exec;
+    //private final itemTablePage tablePage;
 
     //clickable dropdown list elements
     private final By l1Buttons = By.cssSelector(".l1> div > .btn .caret");
@@ -19,7 +19,6 @@ public class catalogPage {
     public catalogPage(WebDriver driver) {
         this.driver = driver;
         exec = (JavascriptExecutor) driver;
-        tablePage = new itemTablePage(driver);
     }
 
     private WebElement[] getL1Buttons() {
@@ -38,7 +37,7 @@ public class catalogPage {
         return driver.findElements(l4Buttons).toArray(new WebElement[0]);
     }
 
-    private WebElement[] getAllWhiteButtons() {
+    public WebElement[] getAllWhiteButtons() {
         return driver.findElements(allWhiteButtons).toArray(new WebElement[0]);
     }
 
@@ -74,7 +73,7 @@ public class catalogPage {
         }
     }
 
-    private void clickAllWhiteButtons(int i) {
+    public void clickAllWhiteButtons(int i) {
         //refreshes button links within every method call to prevent StaleElementReferenceException
         WebElement[] l3WhiteButtons = getAllWhiteButtons();
         l3WhiteButtons[i].click();
@@ -86,60 +85,7 @@ public class catalogPage {
 
     }
 
-    private void clickWhiteButtonAndPageLinks(int i) throws Exception {
-        final String catalogPageId = driver.getWindowHandle();
-        WebElement[] l3WhiteButtons;
-        WebElement[] itemLinks;
-        boolean flag = true;
-
-        jsOpenAllDropdowns();
-        l3WhiteButtons = getAllWhiteButtons();
-        l3WhiteButtons[i].click();
-
-        tablePage.waitForTableInfoPresence();
-
-        new WebDriverWait(driver, 10).until(ExpectedConditions
-                .elementToBeClickable(tablePage.getAllItemLinks()[0]));
-
-        while(flag) {
-            flag = tablePage.isNextPageButtonAvailable();
-            itemLinks = tablePage.getAllItemLinks();
-            System.out.println(tablePage.getAllItemLinks().length);
-            for (WebElement item : itemLinks) {
-                item.click();
-                driver.switchTo().window(driver.getWindowHandles().toArray(new String[0])[1]);
-                tablePage.waitForItemInfoPresence();
-                driver.close();
-                driver.switchTo().window(catalogPageId);
-            }
-            if(flag) {
-                tablePage.clickNextPageElement();
-                Thread.sleep(3000);
-            }
-        }
-        driver.navigate().back();
-        driver.navigate().back();
-        waitForCatalogPageToBeClickable();
-    }
-
-    public void refreshAndClickButtons() {
-        int buttonsAmount = getAllWhiteButtons().length;
-
-        for(int i = 0; i < buttonsAmount; i++) {
-            clickAllWhiteButtons(i);
-        }
-    }
-
-    public void refreshAndClickPageLinks() throws Exception {
-        int buttonsAmount = getAllWhiteButtons().length;
-
-        for(int i = 0; i < buttonsAmount; i++) {
-            clickWhiteButtonAndPageLinks(i);
-        }
-    }
-
-
-    private void jsOpenAllDropdowns() {
+    public void jsOpenAllDropdowns() {
         jsClickElements(driver.findElements(By.cssSelector(".l1> div > .btn .px-2:nth-child(2)")).toArray(new WebElement[0]));
         jsClickElements(driver.findElements(By.cssSelector(".l2> div > .btn .px-2:nth-child(2)")).toArray(new WebElement[0]));
         jsClickElements(driver.findElements(By.cssSelector(".l3> div > .btn .px-2:nth-child(2)")).toArray(new WebElement[0]));
@@ -147,7 +93,7 @@ public class catalogPage {
     }
 
     //uses js script to open inner dropdown lists in catalog dropdown list
-    private void jsClickElements(WebElement[] elements) {
+    public void jsClickElements(WebElement[] elements) {
         for(WebElement element : elements) {
             exec.executeScript("arguments[0].click();", element);
         }
