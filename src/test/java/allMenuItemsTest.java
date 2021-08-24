@@ -1,3 +1,4 @@
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -38,20 +39,25 @@ public class allMenuItemsTest {
         catPage.waitForCatalogPageToBeClickable();
         int buttonsAmount = catPage.getAllWhiteButtons().length;
 
-        for(int i = 0; i < buttonsAmount; i++) {
+        for(int i = 294; i < buttonsAmount; i++) { //clicks on every white button that opens a new table page
             String catalogPageId = driver.getWindowHandle();
             WebElement[] l3WhiteButtons;
             WebElement[] itemLinks;
-            boolean flag = true;
+            boolean flag = true; // checks if there are several pages with table lists
 
             catPage.jsOpenAllDropdowns();
-            l3WhiteButtons = catPage.getAllWhiteButtons();
+            l3WhiteButtons = catPage.getAllWhiteButtons(); //refreshes all links on the catalog page
             l3WhiteButtons[i].click();
 
-            tablePage.waitForTableInfoPresence();
+            try { //prevents Exception if table list is empty
+                tablePage.waitForTableInfoPresence();
+                new WebDriverWait(driver, 10).until(ExpectedConditions
+                        .elementToBeClickable(tablePage.getAllItemLinks()[0]));
+            } catch (Exception e) {
+                flag = false;
+                System.out.println("Table page is empty!");
+            }
 
-            new WebDriverWait(driver, 10).until(ExpectedConditions
-                    .elementToBeClickable(tablePage.getAllItemLinks()[0]));
 
             while(flag) {
                 flag = tablePage.isNextPageButtonAvailable();
@@ -66,10 +72,10 @@ public class allMenuItemsTest {
 
                     //checks for image carousel operation
                     itPage.clickImageCarousel();
-                    //!needs to close appearing image or test crashes
 
-                    //checks for item order operation
+                    //checks for cart text field operation
                     itPage.sendAmount(1);
+                    //!need to check if entered amount is more than minimum ordered amount
 
                     //checks for page tabs operation
                     itPage.clickDescriptionBtn();
@@ -78,12 +84,12 @@ public class allMenuItemsTest {
                     itPage.clickAccessoriesBtn();
                     itPage.clickTechSpecsBtn();
 
-                    //closes current tab and switch into tablePage
+                    //closes current tab and switch into tablePage page
                     driver.close();
                     driver.switchTo().window(catalogPageId);
                 }
                 if(flag) {
-                    //if next page is available, move to it
+                    //if next table page is available, move to it
                     tablePage.clickNextPageElement();
                     Thread.sleep(2000);
                 }
