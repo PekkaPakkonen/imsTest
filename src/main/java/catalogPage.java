@@ -6,7 +6,6 @@ public class catalogPage {
 
     private final WebDriver driver;
     private final JavascriptExecutor exec;
-    //private final itemTablePage tablePage;
 
     //clickable dropdown list elements
     private final By l1Buttons = By.cssSelector(".l1> div > .btn .caret");

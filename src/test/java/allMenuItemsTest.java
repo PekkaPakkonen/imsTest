@@ -1,4 +1,3 @@
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -16,6 +15,7 @@ public class allMenuItemsTest {
     private catalogPage catPage;
     private itemTablePage tablePage;
     private itemPage itPage;
+    private int buttonsAmount;
 
     @BeforeClass
     public void setup() {
@@ -32,14 +32,13 @@ public class allMenuItemsTest {
         loginPage.clickLoginBtn();
         mainPage.waitForCatalogBtnToBeClickable();
         mainPage.clickCatalogBtn();
+        buttonsAmount = catPage.getAllWhiteButtons().length;
+        catPage.waitForCatalogPageToBeClickable();
     }
 
     @Test
     public void checkAllItems() throws InterruptedException {
-        catPage.waitForCatalogPageToBeClickable();
-        int buttonsAmount = catPage.getAllWhiteButtons().length;
-
-        for(int i = 294; i < buttonsAmount; i++) { //clicks on every white button that opens a new table page
+        for(int i = 1; i < buttonsAmount; i++) { //clicks on every white button that opens a new table page
             String catalogPageId = driver.getWindowHandle();
             WebElement[] l3WhiteButtons;
             WebElement[] itemLinks;
@@ -97,6 +96,11 @@ public class allMenuItemsTest {
             driver.get("https://ims3.ekf.su/hasura/catalog");
             catPage.waitForCatalogPageToBeClickable();
         }
+    }
+
+    @Test
+    public void checkCircuitBreakers() {
+
     }
 
     @AfterClass
