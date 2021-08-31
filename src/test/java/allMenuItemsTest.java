@@ -3,6 +3,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -32,12 +33,12 @@ public class allMenuItemsTest {
         loginPage.clickLoginBtn();
         mainPage.waitForCatalogBtnToBeClickable();
         mainPage.clickCatalogBtn();
-        buttonsAmount = catPage.getAllWhiteButtons().length;
         catPage.waitForCatalogPageToBeClickable();
     }
 
     @Test
     public void checkAllItems() throws InterruptedException {
+        buttonsAmount = catPage.getAllWhiteButtons().length;
         for(int i = 1; i < buttonsAmount; i++) { //clicks on every white button that opens a new table page
             String catalogPageId = driver.getWindowHandle();
             WebElement[] l3WhiteButtons;
@@ -57,7 +58,6 @@ public class allMenuItemsTest {
                 System.out.println("Table page is empty!");
             }
 
-
             while(flag) {
                 flag = tablePage.isNextPageButtonAvailable();
                 itemLinks = tablePage.getAllItemLinks();
@@ -74,7 +74,7 @@ public class allMenuItemsTest {
 
                     //checks for cart text field operation
                     itPage.sendAmount(1);
-                    //!need to check if entered amount is more than minimum ordered amount
+                    //!need to check if entered item amount is more than minimum possible ordered amount
 
                     //checks for page tabs operation
                     itPage.clickDescriptionBtn();
@@ -82,6 +82,9 @@ public class allMenuItemsTest {
                     itPage.clickAnaloguesBtn();
                     itPage.clickAccessoriesBtn();
                     itPage.clickTechSpecsBtn();
+
+                    //checks if all "add to cart" buttons have been enabled after item amount have been entered into text field
+                    Assert.assertEquals(itPage.getAddToCartDisabledBtn().length, 0);
 
                     //closes current tab and switch into tablePage page
                     driver.close();

@@ -4,6 +4,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -24,7 +26,8 @@ public class itemPage {
     private final By imageCarousel = By.cssSelector(".swiper-catalog-item-thumbs .embed-responsive-1by1:not(.border)  .embed-responsive-item:not(.sprite-icons)");
     private final By calculateBtn = By.cssSelector(".px-1 .btn.btn-secondary");
     private final By bigItemImage = By.cssSelector(".border .embed-responsive-item:not(.item)"); //css selector without 360 degree panorama
-    private final By addToCartBtn = By.cssSelector(".btn.btn-primary[type=\"button\"]");
+    private final By addToCartDisabledBtn = By.cssSelector(".btn.btn-primary[type=\"button\"].disabled");
+    private final By minimalOrderAmount = By.cssSelector(".table-stock td:nth-of-type(3)");
 
     public itemPage(WebDriver driver) {
         this.driver = driver;
@@ -77,13 +80,18 @@ public class itemPage {
         return driver.findElements(bigItemImage).toArray(new WebElement[0]);
     }
 
-    public WebElement[] getAddToCartBtn() {
-        return driver.findElements(addToCartBtn).toArray(new WebElement[0]);
+    public WebElement[] getAddToCartDisabledBtn() {
+        return driver.findElements(addToCartDisabledBtn).toArray(new WebElement[0]);
+    }
+
+    public WebElement[] getMinimumOrderAmount() {
+        return driver.findElements(minimalOrderAmount).toArray(new WebElement[0]);
     }
 
     //click on clickable page elements
     public void clickTechSpecsBtn() {
         getTechSpecsBtn().click();
+        driver.manage().window().
     }
 
     public void clickDescriptionBtn() {
@@ -118,22 +126,18 @@ public class itemPage {
 
     //put value into every text field to order item
     public void sendAmount(int value) {
-        for(WebElement element : getAmountTextField()) {
-            element.sendKeys(String.valueOf(value));
+        for(WebElement el : getAmountTextField()) {
+            el.sendKeys(String.valueOf(value));
         }
     }
 
-    public void checkForEnablerAddToCartBtn() throws Exception {
-        if(getAddToCartBtn().length > 0)
-            throw new Exception("Add to cart button should be enabled!");
-    }
-
-    //put price discount value (as percents value) into text field
+    //put price discount value (as percentage) into text field
     public void sendDiscount(int value) {
         driver.findElement(inputDiscount).sendKeys(String.valueOf(value));
     }
 
-    //wait until title item name appears in users view
+
+    //wait until title item name appears in user's view
     public void waitForItemInfoPresence() {
         new WebDriverWait(driver, 10).until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".h4.font-weight-bold.d-lg-none")));
         try {
