@@ -93,9 +93,14 @@ public class catalogPage {
 
     //uses js script to open inner dropdown lists in catalog dropdown list
     public void jsClickElements(WebElement[] elements) {
-        for(WebElement element : elements) {
-            exec.executeScript("arguments[0].click();", element);
+        if (elements == null)
+            System.out.println("elements list is empty!");
+        else {
+            for(WebElement element : elements) {
+                exec.executeScript("arguments[0].click();", element);
+            }
         }
+
     }
 
     public void waitForCatalogPageToBeClickable() {

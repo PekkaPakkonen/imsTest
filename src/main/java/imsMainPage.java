@@ -9,6 +9,9 @@ public class imsMainPage {
     private WebDriver driver;
 
     private By catalogBtn = By.cssSelector(".nav-link.catalog[href=\"/hasura/catalog\"]");
+    private By exitBtn = By.cssSelector(".navbar-nav .nav-item:nth-child(1)");
+    private By marketingBtn = By.cssSelector(".flex-column .nav-item:nth-child(12)");
+    private By advertisementBtn = By.cssSelector(".flex-column .nav-item:nth-child(12) .nuxt-link-active");
     private By createRequestBtn = By.cssSelector(".btn.px-30");
     private By formAIRtn = By.cssSelector(".btn.mb-30");
 
@@ -16,8 +19,24 @@ public class imsMainPage {
         this.driver = driver;
     }
 
+    public By getAdvertisementBtn() {
+        return advertisementBtn;
+    }
+
     public void clickCatalogBtn() {
         driver.findElement(catalogBtn).click();
+    }
+
+    public void clickExitBtn() {
+        driver.findElement(exitBtn).click();
+    }
+
+    public void clickMarketingBtn() {
+        driver.findElement(marketingBtn).click();
+    }
+
+    public void clickAdvertisementBtn() {
+        driver.findElement(advertisementBtn).click();
     }
 
     public By getCatalogBtn() {
@@ -27,4 +46,6 @@ public class imsMainPage {
     public WebElement waitForCatalogBtnToBeClickable() {
         return new WebDriverWait(driver, 10).until(ExpectedConditions.elementToBeClickable(getCatalogBtn()));
     }
+
+
 }

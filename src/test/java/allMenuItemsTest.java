@@ -16,7 +16,7 @@ public class allMenuItemsTest {
     private catalogPage catPage;
     private itemTablePage tablePage;
     private itemPage itPage;
-    private int buttonsAmount;
+
 
     @BeforeClass
     public void setup() {
@@ -27,7 +27,7 @@ public class allMenuItemsTest {
         catPage = new catalogPage(driver);
         tablePage = new itemTablePage(driver);
         itPage = new itemPage(driver);
-        driver.get("https://ims3.ekf.su/login");
+        driver.get("https://ims3dev.ekf.su/login");
         loginPage.fillLoginField();
         loginPage.fillPasswordField();
         loginPage.clickLoginBtn();
@@ -38,12 +38,13 @@ public class allMenuItemsTest {
 
     @Test
     public void checkAllItems() throws InterruptedException {
-        buttonsAmount = catPage.getAllWhiteButtons().length;
-        for(int i = 1; i < buttonsAmount; i++) { //clicks on every white button that opens a new table page
+        int buttonsAmount = catPage.getAllWhiteButtons().length;
+        for(int i = 0; i < buttonsAmount; i++) { //clicks on every white button that opens a new table page
             String catalogPageId = driver.getWindowHandle();
             WebElement[] l3WhiteButtons;
             WebElement[] itemLinks;
             boolean flag = true; // checks if there are several pages with table lists
+            boolean secflag = true;
 
             catPage.jsOpenAllDropdowns();
             l3WhiteButtons = catPage.getAllWhiteButtons(); //refreshes all links on the catalog page
@@ -61,12 +62,16 @@ public class allMenuItemsTest {
             while(flag) {
                 flag = tablePage.isNextPageButtonAvailable();
                 itemLinks = tablePage.getAllItemLinks();
-                for (WebElement item : itemLinks) {
-                    item.click();
+                for(int j = 0; j < itemLinks.length;j++) {
+                //for (WebElement item : itemLinks) {
+                    itemLinks[j].click();
                     driver.switchTo().window(driver.getWindowHandles().toArray(new String[0])[1]);
                     itPage.waitForItemInfoPresence();
                     //checks for discount price operation
-                    itPage.sendDiscount(50);
+                    if(secflag) {
+                        itPage.sendDiscount(50);
+                        secflag = false;
+                    }
                     itPage.clickCalculateBtn();
 
                     //checks for image carousel operation
@@ -101,10 +106,10 @@ public class allMenuItemsTest {
         }
     }
 
-    @Test
+    /*@Test
     public void checkCircuitBreakers() {
 
-    }
+    }*/
 
     @AfterClass
     public void quit() throws Exception {

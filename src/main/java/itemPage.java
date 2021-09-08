@@ -8,6 +8,7 @@ import org.testng.Assert;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Objects;
 
 public class itemPage {
 
@@ -91,7 +92,7 @@ public class itemPage {
     //click on clickable page elements
     public void clickTechSpecsBtn() {
         getTechSpecsBtn().click();
-        driver.manage().window().
+        driver.manage().window().maximize();
     }
 
     public void clickDescriptionBtn() {
@@ -133,13 +134,17 @@ public class itemPage {
 
     //put price discount value (as percentage) into text field
     public void sendDiscount(int value) {
-        driver.findElement(inputDiscount).sendKeys(String.valueOf(value));
-    }
+        String text = driver.findElement(inputDiscount).getText();
+        if(Objects.equals(text, "")) {
+            driver.findElement(inputDiscount).sendKeys(String.valueOf(value));
+        }
+
+    } //!change method so that discount is put into textfield only once during test execution
 
 
     //wait until title item name appears in user's view
     public void waitForItemInfoPresence() {
-        new WebDriverWait(driver, 10).until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".h4.font-weight-bold.d-lg-none")));
+        new WebDriverWait(driver, 15).until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".h4.font-weight-bold.d-lg-none")));
         try {
             file.write(driver.findElement(By.cssSelector(".h4.font-weight-bold.d-none")).getText() + "\n");
             file.flush();

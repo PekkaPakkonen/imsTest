@@ -1,5 +1,7 @@
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class imsLoginPage {
 
@@ -35,6 +37,11 @@ public class imsLoginPage {
     public void fillLoginField() {
         driver.findElement(loginField).sendKeys(login);
     }
+
+    public void waitForLoginField() {
+        new WebDriverWait(driver,10).until(ExpectedConditions.presenceOfElementLocated(loginField));
+    }
+
 
 
 }
