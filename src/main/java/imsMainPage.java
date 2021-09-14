@@ -10,10 +10,13 @@ public class imsMainPage {
 
     private By catalogBtn = By.cssSelector(".nav-link.catalog[href=\"/hasura/catalog\"]");
     private By exitBtn = By.cssSelector(".navbar-nav .nav-item:nth-child(1)");
-    private By marketingBtn = By.cssSelector(".flex-column .nav-item:nth-child(12)");
-    private By advertisementBtn = By.cssSelector(".flex-column .nav-item:nth-child(12) .nuxt-link-active");
+    private By marketingBtn = By.xpath("//span[contains(text(),'Маркетинг')]");
+    private By advertisementBtn = By.xpath("//li/div/ul/li[4]/a[contains(text(),'Рекламные материалы')]");
     private By createRequestBtn = By.cssSelector(".btn.px-30");
     private By formAIRtn = By.cssSelector(".btn.mb-30");
+
+    ////span[contains(text(),'Маркетинг')]
+    //li/div/ul/li[4]/a[contains(text(),'Рекламные материалы')]
 
     public imsMainPage(WebDriver driver) {
         this.driver = driver;
