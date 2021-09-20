@@ -39,13 +39,12 @@ public class allMenuItemsTest {
     @Test
     public void checkAllItems() throws InterruptedException {
         int buttonsAmount = catPage.getAllWhiteButtons().length;
+        boolean secflag = true;
         for(int i = 0; i < buttonsAmount; i++) { //clicks on every white button that opens a new table page
             String catalogPageId = driver.getWindowHandle();
             WebElement[] l3WhiteButtons;
             WebElement[] itemLinks;
             boolean flag = true; // checks if there are several pages with table lists
-            boolean secflag = true;
-
             catPage.jsOpenAllDropdowns();
             l3WhiteButtons = catPage.getAllWhiteButtons(); //refreshes all links on the catalog page
             l3WhiteButtons[i].click();
@@ -60,6 +59,7 @@ public class allMenuItemsTest {
             }
 
             while(flag) {
+                int page = 1;
                 flag = tablePage.isNextPageButtonAvailable();
                 itemLinks = tablePage.getAllItemLinks();
                 for(int j = 0; j < itemLinks.length;j++) {
@@ -95,25 +95,24 @@ public class allMenuItemsTest {
                     driver.close();
                     driver.switchTo().window(catalogPageId);
                 }
+
                 if(flag) {
                     //if next table page is available, move to it
                     tablePage.clickNextPageElement();
-                    Thread.sleep(2000);
+                    page++;
+                    new WebDriverWait(driver, 10).until(ExpectedConditions.urlContains("page=" + page));
+                    tablePage.waitForTableInfoPresence();
                 }
             }
-            driver.get("https://ims3.ekf.su/hasura/catalog");
+            driver.get("https://ims3dev.ekf.su/hasura/catalog");
             catPage.waitForCatalogPageToBeClickable();
         }
     }
 
-    /*@Test
-    public void checkCircuitBreakers() {
 
-    }*/
 
     @AfterClass
-    public void quit() throws Exception {
-        Thread.sleep(5000);
+    public void quit() {
         driver.quit();
     }
 }

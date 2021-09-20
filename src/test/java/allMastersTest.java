@@ -18,7 +18,7 @@ public class allMastersTest {
     private marketingPage marketingPage;
 
     @BeforeClass
-    public void setup() throws IOException {
+    public void setup() {
         driver = new FirefoxDriver();
         driver.manage().window().maximize();
         loginPage = new imsLoginPage(driver);
@@ -31,7 +31,7 @@ public class allMastersTest {
     @Test
     public void marketingTabCheck() throws Exception {
         BufferedReader reader = new BufferedReader(new FileReader("input.csv"));
-        BufferedWriter writer = new BufferedWriter(new FileWriter("output2.csv",true));
+        BufferedWriter writer = new BufferedWriter(new FileWriter("output.csv"));
         reader.readLine();
         writer.write("login,password,marketing tab availability\n");
         writer.flush();
