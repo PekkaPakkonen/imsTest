@@ -12,6 +12,7 @@ public class imsMainPage {
     private By exitBtn = By.cssSelector(".navbar-nav .nav-item:nth-child(1)");
     private By marketingBtn = By.xpath("//span[contains(text(),'Маркетинг')]");
     private By advertisementBtn = By.xpath("//li/div/ul/li[4]/a[contains(text(),'Рекламные материалы')]");
+    private By documentsBtn = By.xpath("//span[contains(text(),'Документы и презентации')]");
     private By createRequestBtn = By.cssSelector(".btn.px-30");
     private By formAIRtn = By.cssSelector(".btn.mb-30");
 
@@ -41,6 +42,8 @@ public class imsMainPage {
     public void clickAdvertisementBtn() {
         driver.findElement(advertisementBtn).click();
     }
+
+    public void clickDocumentsBtn() { driver.findElement(documentsBtn).click();}
 
     public By getCatalogBtn() {
         return catalogBtn;

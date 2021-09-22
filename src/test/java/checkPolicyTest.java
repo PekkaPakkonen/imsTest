@@ -1,6 +1,4 @@
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -13,12 +11,12 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 
-public class allMastersTest {
+public class checkPolicyTest {
 
     private WebDriver driver;
     private imsLoginPage loginPage;
     private imsMainPage mainPage;
-    private marketingPage marketingPage;
+    private documentsPage docsPage;
 
     @BeforeClass
     public void setup() {
@@ -26,23 +24,22 @@ public class allMastersTest {
         driver.manage().window().maximize();
         loginPage = new imsLoginPage(driver);
         mainPage = new imsMainPage(driver);
-        marketingPage = new marketingPage(driver);
+        docsPage = new documentsPage(driver);
         driver.get("https://ims3dev.ekf.su/login");
 
     }
 
     @Test
-    public void marketingTabCheck() throws Exception {
+    public void docsCheck() throws Exception {
         BufferedReader reader = new BufferedReader(new FileReader("input.csv"));
         BufferedWriter writer = new BufferedWriter(new FileWriter("output.csv"));
         reader.readLine();
-        writer.write("login,password,marketing tab availability\n");
+        writer.write("login,password,policy docs access\n");
         writer.flush();
 
         while(reader.ready()) {
             String[] str = reader.readLine().split(",");
-
-         /**/   loginPage.fillLoginField(str[0]);
+            loginPage.fillLoginField(str[0]);
             loginPage.fillPasswordField(str[1]);
             loginPage.clickLoginBtn();
             try {
@@ -54,15 +51,14 @@ public class allMastersTest {
             }
 
             try {
-                mainPage.clickMarketingBtn();
-                new WebDriverWait(driver, 10).until(ExpectedConditions.presenceOfElementLocated(mainPage.getAdvertisementBtn()));
-                mainPage.clickAdvertisementBtn();
-                marketingPage.waitForTable();
+                mainPage.clickDocumentsBtn();
+                new WebDriverWait(driver, 10).until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".col .page-title")));
+                System.out.println(driver.findElement(By.cssSelector("[colspan=\"2\"] .text-center.text-muted span")).getText());
                 writer.write(String.format("%s,%s\n",str[0],str[1]));
             } catch (NoSuchElementException e) {
-                writer.write(String.format("%s,%s,\"Marketing\" tab isn't available\n", str[0], str[1]));
+                writer.write(String.format("%s,%s, available", str[0], str[1]));
             } catch (TimeoutException e) {
-                writer.write(String.format("%s,%s,\"Advertisement materials\" in \"Marketing\" isn't available\n", str[0], str[1]));
+                writer.write(String.format("%s,%s, without docs tab at all", str[0], str[1]));
             }
             writer.flush();
             mainPage.clickExitBtn();
