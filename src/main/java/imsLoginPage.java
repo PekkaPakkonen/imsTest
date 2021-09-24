@@ -41,7 +41,4 @@ public class imsLoginPage {
     public void waitForLoginField() {
         new WebDriverWait(driver,10).until(ExpectedConditions.presenceOfElementLocated(loginField));
     }
-
-
-
 }

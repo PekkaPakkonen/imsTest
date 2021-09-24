@@ -1,3 +1,5 @@
+import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -15,6 +17,7 @@ public class imsMainPage {
     private By documentsBtn = By.xpath("//span[contains(text(),'Документы и презентации')]");
     private By createRequestBtn = By.cssSelector(".btn.px-30");
     private By formAIRtn = By.cssSelector(".btn.mb-30");
+    private By alertHeading = By.cssSelector("h4.alert-heading");
 
     ////span[contains(text(),'Маркетинг')]
     //li/div/ul/li[4]/a[contains(text(),'Рекламные материалы')]
@@ -47,6 +50,15 @@ public class imsMainPage {
 
     public By getCatalogBtn() {
         return catalogBtn;
+    }
+
+    public Boolean isActiveSubDealer() {
+        try {
+            driver.findElement(alertHeading).getText();
+            return false;
+        } catch (NoSuchElementException e) {
+            return true;
+        }
     }
 
     public WebElement waitForCatalogBtnToBeClickable() {

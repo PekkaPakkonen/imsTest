@@ -31,21 +31,21 @@ public class checkPolicyTest {
 
     @Test
     public void docsCheck() throws Exception {
-        BufferedReader reader = new BufferedReader(new FileReader("input.csv"));
-        BufferedWriter writer = new BufferedWriter(new FileWriter("output.csv"));
+        BufferedReader reader = new BufferedReader(new FileReader("users.csv"));
+        BufferedWriter writer = new BufferedWriter(new FileWriter("users2.csv"));
         reader.readLine();
-        writer.write("login,password,policy docs access\n");
+        writer.write("login;password;policy docs access\n");
         writer.flush();
 
         while(reader.ready()) {
-            String[] str = reader.readLine().split(",");
+            String[] str = reader.readLine().split(";"); //";" for MS, "," for LibreOffice
             loginPage.fillLoginField(str[0]);
             loginPage.fillPasswordField(str[1]);
             loginPage.clickLoginBtn();
             try {
                 mainPage.waitForCatalogBtnToBeClickable();
             } catch (TimeoutException e) {
-                writer.write(String.format("%s,%s,wrong login or password\n", str[0], str[1]));
+                writer.write(String.format("%s;%s;wrong login or password\n", str[0], str[1]));
                 driver.navigate().refresh();
                 continue;
             }
@@ -53,12 +53,12 @@ public class checkPolicyTest {
             try {
                 mainPage.clickDocumentsBtn();
                 new WebDriverWait(driver, 10).until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".col .page-title")));
-                System.out.println(driver.findElement(By.cssSelector("[colspan=\"2\"] .text-center.text-muted span")).getText());
-                writer.write(String.format("%s,%s\n",str[0],str[1]));
+                driver.findElement(By.cssSelector("[colspan=\"2\"] .text-center.text-muted span")).getText();
+                writer.write(String.format("%s;%s;unavailable\n",str[0],str[1]));
             } catch (NoSuchElementException e) {
-                writer.write(String.format("%s,%s, available", str[0], str[1]));
+                writer.write(String.format("%s;%s;available\n", str[0], str[1]));
             } catch (TimeoutException e) {
-                writer.write(String.format("%s,%s, without docs tab at all", str[0], str[1]));
+                writer.write(String.format("%s;%s;without docs tab at all\n", str[0], str[1]));
             }
             writer.flush();
             mainPage.clickExitBtn();

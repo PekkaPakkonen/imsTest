@@ -41,27 +41,27 @@ public class itemPage {
     }
 
     // get page elements as WebElement objects
-    private WebElement getTechSpecsBtn() {
+    public WebElement getTechSpecsBtn() {
         return driver.findElement(techSpecsBtn);
     }
 
-    private WebElement getDescriptionBtn() {
+    public WebElement getDescriptionBtn() {
         return driver.findElement(descriptionBtn);
     }
 
-    private WebElement getDocsBtn() {
+    public WebElement getDocsBtn() {
         return driver.findElement(docsBtn);
     }
 
-    private WebElement getAnaloguesBtn() {
+    public WebElement getAnaloguesBtn() {
         return driver.findElement(analoguesBtn);
     }
 
-    private WebElement getAccessoriesBtn() {
+    public WebElement getAccessoriesBtn() {
         return driver.findElement(accessoriesBtn);
     }
 
-    private WebElement getCalculateBtn() {
+    public WebElement getCalculateBtn() {
         return driver.findElement(calculateBtn);
     }
 
@@ -115,7 +115,7 @@ public class itemPage {
         getAccessoriesBtn().click();
     }
 
-    //click every image in image carousel
+    //clicks on every image in image carousel
     public void clickImageCarousel() {
         for(int i = 0; i < getImageCarousel().length; i++) {
             getImageCarousel()[i].click();
@@ -125,14 +125,14 @@ public class itemPage {
         }
     }
 
-    //put value into every text field to order item
+    //puts value into every order item field
     public void sendAmount(int value) {
         for(WebElement el : getAmountTextField()) {
             el.sendKeys(String.valueOf(value));
         }
     }
 
-    //put price discount value (as percentage) into text field
+    //puts price percent value of discount into text field
     public void sendDiscount(int value) {
         String text = driver.findElement(inputDiscount).getText();
         if(Objects.equals(text, "")) {
@@ -142,7 +142,7 @@ public class itemPage {
     } //!change method so that discount is put into textfield only once during test execution
 
 
-    //wait until title item name appears in user's view
+    //waits until title of item name appears in user's view
     public void waitForItemInfoPresence() {
         new WebDriverWait(driver, 15).until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".h4.font-weight-bold.d-lg-none")));
         try {
@@ -153,14 +153,14 @@ public class itemPage {
         }
     }
 
-    //wait until specs tab appears
+    //waits until specs tab appears in user's view
     public void waitForTechSpecsPresence() {
         new WebDriverWait(driver, 10).until(ExpectedConditions.presenceOfElementLocated(techSpecsBtn));
     }
 
-    //wait until discount calculated price appears
+    //waits until discount calculated price appears in user's view
     public void waitForPricePresence() {
-        new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(getCalculatedPrice()));
+        new WebDriverWait(driver, 30).until(ExpectedConditions.visibilityOf(getCalculatedPrice()));
     }
 
 

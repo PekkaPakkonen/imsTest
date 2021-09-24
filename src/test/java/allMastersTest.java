@@ -33,16 +33,15 @@ public class allMastersTest {
 
     @Test
     public void marketingTabCheck() throws Exception {
-        BufferedReader reader = new BufferedReader(new FileReader("input.csv"));
-        BufferedWriter writer = new BufferedWriter(new FileWriter("output.csv"));
+        BufferedReader reader = new BufferedReader(new FileReader("users.csv"));
+        BufferedWriter writer = new BufferedWriter(new FileWriter("users2.csv"));
         reader.readLine();
-        writer.write("login,password,marketing tab availability\n");
+        writer.write("login;password;marketing tab availability\n");
         writer.flush();
 
         while(reader.ready()) {
-            String[] str = reader.readLine().split(",");
-
-         /**/   loginPage.fillLoginField(str[0]);
+            String[] str = reader.readLine().split(";");
+            loginPage.fillLoginField(str[0]);
             loginPage.fillPasswordField(str[1]);
             loginPage.clickLoginBtn();
             try {
@@ -53,21 +52,25 @@ public class allMastersTest {
                 continue;
             }
 
-            try {
-                mainPage.clickMarketingBtn();
-                new WebDriverWait(driver, 10).until(ExpectedConditions.presenceOfElementLocated(mainPage.getAdvertisementBtn()));
-                mainPage.clickAdvertisementBtn();
-                marketingPage.waitForTable();
-                writer.write(String.format("%s,%s\n",str[0],str[1]));
-            } catch (NoSuchElementException e) {
-                writer.write(String.format("%s,%s,\"Marketing\" tab isn't available\n", str[0], str[1]));
-            } catch (TimeoutException e) {
-                writer.write(String.format("%s,%s,\"Advertisement materials\" in \"Marketing\" isn't available\n", str[0], str[1]));
+            if(mainPage.isActiveSubDealer()) {
+                try {
+                    mainPage.clickMarketingBtn();
+                    new WebDriverWait(driver, 10).until(ExpectedConditions.presenceOfElementLocated(mainPage.getAdvertisementBtn()));
+                    mainPage.clickAdvertisementBtn();
+                    marketingPage.waitForTable();
+                    writer.write(String.format("%s;%s;available\n",str[0],str[1]));
+                } catch (NoSuchElementException e) {
+                    writer.write(String.format("%s;%s;unavailable\n", str[0], str[1]));
+                } catch (TimeoutException e) {
+                    writer.write(String.format("%s;%s;\"Advertisement materials\" in \"Marketing\" isn't available\n", str[0], str[1]));
+                }
+                writer.flush();
+
+            } else {
+                writer.write(String.format("%s;%s;not an active subdealer\n", str[0], str[1]));
             }
-            writer.flush();
             mainPage.clickExitBtn();
             loginPage.waitForLoginField();
-
         }
 
     }

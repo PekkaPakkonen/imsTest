@@ -63,7 +63,7 @@ public class allMenuItemsTest {
                 flag = tablePage.isNextPageButtonAvailable();
                 itemLinks = tablePage.getAllItemLinks();
                 for(int j = 0; j < itemLinks.length;j++) {
-                //for (WebElement item : itemLinks) {
+                    //for (WebElement item : itemLinks) {
                     itemLinks[j].click();
                     driver.switchTo().window(driver.getWindowHandles().toArray(new String[0])[1]);
                     itPage.waitForItemInfoPresence();
