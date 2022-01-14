@@ -13,8 +13,8 @@ public class allCatalogMenusTest {
 
     @BeforeClass
     public void setup() {
-        driver = new FirefoxDriver();
         driver.manage().window().maximize();
+        driver = new FirefoxDriver();
         loginPage = new imsLoginPage(driver);
         mainPage = new imsMainPage(driver);
         catPage = new catalogPage(driver);

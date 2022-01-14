@@ -8,8 +8,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-//Tests if all information about items ia available
-public class allMenuItemsTest {
+public class allItemsTest {
 
     private WebDriver driver;
     private imsLoginPage loginPage;
@@ -38,19 +37,17 @@ public class allMenuItemsTest {
     }
 
     @Test
-    public void checkAllItems() throws InterruptedException {
+    public void checkAllItems() {
         int buttonsAmount = catPage.getAllWhiteButtons().length;
-        boolean secflag = true;
         for(int i = 0; i < buttonsAmount; i++) { //clicks on every white button that opens a new table page
-            String catalogPageId = driver.getWindowHandle();
             WebElement[] l3WhiteButtons;
             WebElement[] itemLinks;
             boolean flag = true; // checks if there are several pages with table lists
             catPage.jsOpenAllDropdowns();
-            l3WhiteButtons = catPage.getAllWhiteButtons(); //refreshes all links on the catalog page
-            l3WhiteButtons[i].click();
+            l3WhiteButtons = catPage.getAllWhiteButtons();
+            l3WhiteButtons[i].click();//refreshes all links on the catalog page
 
-            try { //prevents Exception if table list is empty
+            try {
                 tablePage.waitForTableInfoPresence();
                 new WebDriverWait(driver, 10).until(ExpectedConditions
                         .elementToBeClickable(tablePage.getAllItemLinks()[0]));
@@ -63,39 +60,6 @@ public class allMenuItemsTest {
                 int page = 1;
                 flag = tablePage.isNextPageButtonAvailable();
                 itemLinks = tablePage.getAllItemLinks();
-                for(int j = 0; j < itemLinks.length;j++) {
-                    //for (WebElement item : itemLinks) {
-                    itemLinks[j].click();
-                    driver.switchTo().window(driver.getWindowHandles().toArray(new String[0])[1]);
-                    itPage.waitForItemInfoPresence();
-                    //checks for discount price operation
-                    if(secflag) {
-                        itPage.sendDiscount(50);
-                        secflag = false;
-                    }
-                    itPage.clickCalculateBtn();
-
-                    //checks for image carousel operation
-                    itPage.clickImageCarousel();
-
-                    //checks for cart text field operation
-                    itPage.sendAmount(1);
-                    //!need to check if entered item amount is more than minimum possible ordered amount
-
-                    //checks for page tabs operation
-                    itPage.clickDescriptionBtn();
-                    itPage.clickDocsBtn();
-                    itPage.clickAnaloguesBtn();
-                    itPage.clickAccessoriesBtn();
-                    itPage.clickTechSpecsBtn();
-
-                    //checks if all "add to cart" buttons have been enabled after item amount have been entered into text field
-                    Assert.assertEquals(itPage.getAddToCartDisabledBtn().length, 0);
-
-                    //closes current tab and switch into tablePage page
-                    driver.close();
-                    driver.switchTo().window(catalogPageId);
-                }
 
                 if(flag) {
                     //if next table page is available, move to it

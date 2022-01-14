@@ -12,6 +12,7 @@ public class catalogPage {
     private final By l2Buttons = By.cssSelector(".l2> div > .btn .caret");
     private final By l3Buttons = By.cssSelector(".l3> div > .btn .caret");
     private final By l4Buttons = By.cssSelector(".l4> div > .btn .caret");
+    private final By l2ButtonsMenu = By.cssSelector(".l2> div > .btn .px-2:nth-child(1)");
     //clickable buttons with a link to item charts
     private final By allWhiteButtons = By.cssSelector(".l2 .btn-white span");
 
@@ -26,6 +27,10 @@ public class catalogPage {
 
     private WebElement[] getL2Buttons() {
         return driver.findElements(l2Buttons).toArray(new WebElement[0]);
+    }
+
+    private WebElement[] getL2ButtonsMenu() {
+        return driver.findElements(l2ButtonsMenu).toArray(new WebElement[0]);
     }
 
     private WebElement[] getL3Buttons() {
